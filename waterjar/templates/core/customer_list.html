@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+{% block title %}Customers — Ratna Water Plant{% endblock %}
+
+{% block content %}
+<div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
+    <div>
+        <h2 class="text-2xl font-bold text-gray-900">Customers</h2>
+        <p class="text-sm text-gray-500 mt-1">{{ customers|length }} customer{{ customers|length|pluralize }}</p>
+    </div>
+    <div class="flex items-center gap-3">
+        <form method="get" class="flex items-center gap-2">
+            <input type="text" name="q" value="{{ search_query }}"
+                   placeholder="Search name or phone..."
+                   class="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 w-48">
+            <button type="submit" class="px-3 py-2 bg-gray-100 border border-gray-300 rounded-lg text-sm hover:bg-gray-200 transition-colors">Search</button>
+        </form>
+        {% if not is_owner_view %}
+        <a href="{% url 'customer_create' %}" class="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition-colors">+ Add</a>
+        {% endif %}
+    </div>
+</div>
+
+<div class="bg-white rounded-xl border border-gray-200">
+    <div class="overflow-x-auto">
+        <table class="w-full text-sm">
+            <thead class="bg-gray-50 text-left">
+                <tr>
+                    <th class="px-5 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wide">Name</th>
+                    <th class="px-5 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wide">Phone</th>
+                    <th class="px-5 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wide">Type</th>
+                    <th class="px-5 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wide">Jar Price</th>
+                    <th class="px-5 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wide">Staff</th>
+                    <th class="px-5 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wide">Status</th>
+                    {% if not is_owner_view %}
+                    <th class="px-5 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wide">Actions</th>
+                    {% endif %}
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-100">
+                {% for c in customers %}
+                <tr class="hover:bg-gray-50">
+                    <td class="px-5 py-3 font-medium text-gray-800">{{ c.name }}</td>
+                    <td class="px-5 py-3 text-gray-600">{{ c.phone }}</td>
+                    <td class="px-5 py-3">
+                        <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium {% if c.type == 'regular' %}bg-blue-100 text-blue-800{% else %}bg-purple-100 text-purple-800{% endif %}">
+                            {{ c.get_type_display }}
+                        </span>
+                    </td>
+                    <td class="px-5 py-3 text-gray-800">₹{{ c.jar_price }}</td>
+                    <td class="px-5 py-3 text-gray-600">{{ c.assigned_staff.get_full_name|default:"—" }}</td>
+                    <td class="px-5 py-3">
+                        {% if c.is_active %}
+                        <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">Active</span>
+                        {% else %}
+                        <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-600">Inactive</span>
+                        {% endif %}
+                    </td>
+                    {% if not is_owner_view %}
+                    <td class="px-5 py-3">
+                        <a href="{% url 'customer_edit' c.pk %}" class="text-blue-600 hover:text-blue-800 text-xs font-medium">Edit</a>
+                    </td>
+                    {% endif %}
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="{% if is_owner_view %}6{% else %}7{% endif %}" class="px-5 py-10 text-center text-gray-400">No customers found.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

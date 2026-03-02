@@ -1,0 +1,26 @@
+<tr class="hover:bg-gray-50">
+                    <td class="px-5 py-3 font-medium text-gray-800">{{ d.customer.name }}</td>
+                    <td class="px-5 py-3 text-gray-800">{{ d.jar_count }}</td>
+                    <td class="px-5 py-3 font-medium text-gray-800">₹{{ d.amount }}</td>
+                    <td class="px-5 py-3">
+                        {% if d.payment_status == 'paid' %}
+                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">Paid</span>
+                        {% else %}
+                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-amber-100 text-amber-800">Pending</span>
+                        {% endif %}
+                    </td>
+                    <td class="px-5 py-3 capitalize text-gray-600">{{ d.payment_mode }}</td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="5" class="px-5 py-10 text-center text-gray-400">
+                        No deliveries yet today.
+                        <a href="{% url 'delivery_create' %}" class="text-blue-600 hover:underline">Record one now</a>.
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

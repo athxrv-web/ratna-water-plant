@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+{% block title %}New Delivery — Ratna Water Plant{% endblock %}
+
+{% block content %}
+<div class="max-w-xl">
+    <div class="mb-6">
+        <h2 class="text-2xl font-bold text-gray-900">Record Delivery</h2>
+        <p class="text-sm text-gray-500 mt-1">Add a new jar delivery entry</p>
+    </div>
+
+    <div class="bg-white rounded-xl border border-gray-200 p-6">
+        <form method="post" class="space-y-5">
+            {% csrf_token %}
+
+            {% for field in form %}
+            <div>
+                <label for="{{ field.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-1.5">
+                    {{ field.label }}
+                    {% if field.field.required %}<span class="text-red-500">*</span>{% endif %}
+                </label>
+                {{ field }}
+                {% for error in field.errors %}
+                <p class="mt-1 text-xs text-red-600">{{ error }}</p>
+                {% endfor %}
+            </div>
+            {% endfor %}
+
+            <!-- Live amount preview -->
+            <div id="amount-preview" class="hidden p-4 bg-blue-50 rounded-lg border border-blue-200">
+                <div class="flex items-center justify-between">
+                    <span class="text-sm text-blue-700 font-medium">Estimated Amount:</span>
+                    <span id="calc-amount" class="text-xl font-bold text-blue-800">₹0</span>
+                </div>
+            </div>
+
+            <div class="flex items-center gap-3 pt-3">
+                <button type="submit"
+                    class="px-6 py-2.5 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition-colors">
+                    Save Delivery
+                </button>
+                <a href="{% url 'staff_delivery_list' %}"
+                   class="px-6 py-2.5 bg-white border border-gray-300 text-gray-700 text-sm font-medium rounded-lg hover:bg-gray-50 transition-colors">
+                    Cancel
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Auto-calculate: customer jar_price × jar_count -->
+<script>
+const prices = {
+    {% for c in form.fields.customer.queryset %}
+    "{{ c.pk }}": {{ c.jar_price }},
+    {% endfor %}
+};
+
+const customerEl = document.getElementById('id_customer');
+const jarCountEl = document.getElementById('id_jar_count');
+const previewEl  = document.getElementById('amount-preview');
+const amountEl   = document.getElementById('calc-amount');
+
+function calc() {
+    const cid   = customerEl.value;
+    const count = parseInt(jarCountEl.value) || 0;
+    if (cid && count > 0 && prices[cid]) {
+        amountEl.textContent = '₹' + (prices[cid] * count).toFixed(2);
+        previewEl.classList.remove('hidden');
+    } else {
+        previewEl.classList.add('hidden');
+    }
+}
+
+customerEl.addEventListener('change', calc);
+jarCountEl.addEventListener('input', calc);
+</script>
+{% endblock %}

@@ -1,0 +1,10 @@
+body {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* Print styles — hide sidebar when printing */
+@media print {
+    aside, header { display: none !important; }
+    .md\:ml-64 { margin-left: 0 !important; }
+}
