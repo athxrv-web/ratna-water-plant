@@ -11,10 +11,10 @@ class Command(BaseCommand):
             User.objects.create_superuser(
                 username="owner",
                 password="owner123",
-                first_name="Ratna",
-                last_name="Owner",
+                first_name="mahendra",
+                last_name="tripathi",
                 role=User.Role.OWNER,
-                email="owner@ratnawater.local",
+                email="owner@ratnawater@gmail.com",
             )
             self.stdout.write(
                 self.style.SUCCESS("✓ Owner created  →  username: owner  |  password: owner123")
