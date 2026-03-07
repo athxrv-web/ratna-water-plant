@@ -1,55 +1,7 @@
-{% extends "base.html" %}
-{% load humanize %}
-{% block title %}Salaries — Ratna Water Plant{% endblock %}
-
+{% extends "base.html" %}{% load humanize %}
+{% block title %}Salaries{% endblock %}
 {% block content %}
-<div class="flex items-center justify-between mb-6">
-    <div>
-        <h2 class="text-2xl font-bold text-gray-900">Staff Salaries</h2>
-        <p class="text-sm text-gray-500 mt-1">Monthly salary records</p>
-    </div>
-    <a href="{% url 'salary_create' %}"
-       class="inline-flex items-center gap-2 px-4 py-2.5 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition-colors">
-        + Add Salary
-    </a>
-</div>
-
-<div class="bg-white rounded-xl border border-gray-200">
-    <div class="overflow-x-auto">
-        <table class="w-full text-sm">
-            <thead class="bg-gray-50 text-left">
-                <tr>
-                    <th class="px-5 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wide">Staff</th>
-                    <th class="px-5 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wide">Month</th>
-                    <th class="px-5 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wide">Amount</th>
-                    <th class="px-5 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wide">Status</th>
-                    <th class="px-5 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wide">Actions</th>
-                </tr>
-            </thead>
-            <tbody class="divide-y divide-gray-100">
-                {% for s in salaries %}
-                <tr class="hover:bg-gray-50">
-                    <td class="px-5 py-3 font-medium text-gray-800">{{ s.staff.get_full_name|default:s.staff.username }}</td>
-                    <td class="px-5 py-3 text-gray-600">{{ s.month|date:"F Y" }}</td>
-                    <td class="px-5 py-3 font-medium text-gray-800">₹{{ s.salary_amount|intcomma }}</td>
-                    <td class="px-5 py-3">
-                        {% if s.status == 'paid' %}
-                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">Paid</span>
-                        {% else %}
-                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-amber-100 text-amber-800">Unpaid</span>
-                        {% endif %}
-                    </td>
-                    <td class="px-5 py-3">
-                        <a href="{% url 'salary_edit' s.pk %}" class="text-blue-600 hover:text-blue-800 text-xs font-medium">Edit</a>
-                    </td>
-                </tr>
-                {% empty %}
-                <tr>
-                    <td colspan="5" class="px-5 py-10 text-center text-gray-400">No salary records yet.</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    </div>
-</div>
+<div class="flex items-center justify-between mb-6"><h2 class="text-2xl font-bold">Staff Salaries</h2><a href="{% url 'salary_create' %}" class="px-4 py-2.5 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700">+ Add Salary</a></div>
+<div class="bg-white rounded-xl border"><div class="overflow-x-auto"><table class="w-full text-sm"><thead class="bg-gray-50"><tr><th class="px-5 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Staff</th><th class="px-5 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Month</th><th class="px-5 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Amount</th><th class="px-5 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Status</th><th class="px-5 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Actions</th></tr></thead>
+<tbody class="divide-y">{% for s in salaries %}<tr><td class="px-5 py-3 font-medium">{{ s.staff.get_full_name|default:s.staff.username }}</td><td class="px-5 py-3 text-gray-600">{{ s.month|date:"F Y" }}</td><td class="px-5 py-3 font-medium">₹{{ s.salary_amount|intcomma }}</td><td class="px-5 py-3">{% if s.status == 'paid' %}<span class="px-2 py-0.5 rounded-full text-xs bg-green-100 text-green-800">Paid</span>{% else %}<span class="px-2 py-0.5 rounded-full text-xs bg-amber-100 text-amber-800">Unpaid</span>{% endif %}</td><td class="px-5 py-3"><a href="{% url 'salary_edit' s.pk %}" class="text-blue-600 text-xs">Edit</a></td></tr>{% empty %}<tr><td colspan="5" class="px-5 py-10 text-center text-gray-400">No salary records.</td></tr>{% endfor %}</tbody></table></div></div>
 {% endblock %}
