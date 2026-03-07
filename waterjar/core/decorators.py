@@ -4,8 +4,6 @@ from django.contrib import messages
 
 
 def owner_required(view_func):
-    """Only allow users with the 'owner' role."""
-
     @wraps(view_func)
     def wrapper(request, *args, **kwargs):
         if not request.user.is_authenticated:
@@ -14,13 +12,10 @@ def owner_required(view_func):
             messages.error(request, "Access denied. Owner privileges required.")
             return redirect("dashboard")
         return view_func(request, *args, **kwargs)
-
     return wrapper
 
 
 def staff_required(view_func):
-    """Only allow users with the 'staff' role."""
-
     @wraps(view_func)
     def wrapper(request, *args, **kwargs):
         if not request.user.is_authenticated:
@@ -29,5 +24,4 @@ def staff_required(view_func):
             messages.error(request, "Access denied. Staff privileges required.")
             return redirect("dashboard")
         return view_func(request, *args, **kwargs)
-
     return wrapper
