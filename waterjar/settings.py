@@ -1,8 +1,3 @@
-"""
-Ratna Water Plant — Django Settings
-Works locally (SQLite) and on Railway (PostgreSQL) automatically.
-"""
-
 import os
 import dj_database_url
 from pathlib import Path
@@ -13,15 +8,10 @@ SECRET_KEY = os.environ.get(
     "DJANGO_SECRET_KEY",
     "django-insecure-dev-only-ratna-water-plant-change-in-prod",
 )
-
 DEBUG = os.environ.get("DJANGO_DEBUG", "True").lower() in ("true", "1", "yes")
-
 ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS", "localhost,127.0.0.1").split(",")
-
 CSRF_TRUSTED_ORIGINS = [
-    origin.strip()
-    for origin in os.environ.get("CSRF_TRUSTED_ORIGINS", "").split(",")
-    if origin.strip()
+    o.strip() for o in os.environ.get("CSRF_TRUSTED_ORIGINS", "").split(",") if o.strip()
 ]
 
 INSTALLED_APPS = [
@@ -66,9 +56,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "waterjar.wsgi.application"
 
-# ---------------------------------------------------------------------------
-# Database — Railway auto-sets DATABASE_URL; falls back to SQLite locally
-# ---------------------------------------------------------------------------
 DATABASES = {
     "default": dj_database_url.config(
         default=f"sqlite:///{BASE_DIR / 'db.sqlite3'}",
@@ -76,9 +63,6 @@ DATABASES = {
     )
 }
 
-# ---------------------------------------------------------------------------
-# Auth
-# ---------------------------------------------------------------------------
 AUTH_PASSWORD_VALIDATORS = [
     {"NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator"},
     {"NAME": "django.contrib.auth.password_validation.MinimumLengthValidator"},
@@ -91,17 +75,11 @@ LOGIN_URL = "login"
 LOGIN_REDIRECT_URL = "dashboard"
 LOGOUT_REDIRECT_URL = "login"
 
-# ---------------------------------------------------------------------------
-# i18n
-# ---------------------------------------------------------------------------
 LANGUAGE_CODE = "en-us"
 TIME_ZONE = "Asia/Kolkata"
 USE_I18N = True
 USE_TZ = True
 
-# ---------------------------------------------------------------------------
-# Static files — WhiteNoise serves them on Railway
-# ---------------------------------------------------------------------------
 STATIC_URL = "static/"
 STATICFILES_DIRS = [BASE_DIR / "waterjar" / "static"]
 STATIC_ROOT = BASE_DIR / "staticfiles"
@@ -109,19 +87,12 @@ STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-# ---------------------------------------------------------------------------
-# WhatsApp Business API (Meta Cloud API)
-# Set these in Railway environment variables
-# ---------------------------------------------------------------------------
 WHATSAPP_API_URL = os.environ.get(
     "WHATSAPP_API_URL",
     "https://graph.facebook.com/v18.0/YOUR_PHONE_NUMBER_ID/messages",
 )
 WHATSAPP_API_TOKEN = os.environ.get("WHATSAPP_API_TOKEN", "")
 
-# ---------------------------------------------------------------------------
-# Production security hardening
-# ---------------------------------------------------------------------------
 if not DEBUG:
     SECURE_BROWSER_XSS_FILTER = True
     SECURE_CONTENT_TYPE_NOSNIFF = True
