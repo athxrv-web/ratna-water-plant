@@ -1,63 +1,7 @@
 {% extends "base.html" %}
-{% block title %}Staff — Ratna Water Plant{% endblock %}
-
+{% block title %}Staff{% endblock %}
 {% block content %}
-<div class="flex items-center justify-between mb-6">
-    <div>
-        <h2 class="text-2xl font-bold text-gray-900">Staff Members</h2>
-        <p class="text-sm text-gray-500 mt-1">Manage your delivery team</p>
-    </div>
-    <a href="{% url 'staff_create' %}"
-       class="inline-flex items-center gap-2 px-4 py-2.5 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition-colors">
-        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/></svg>
-        Add Staff
-    </a>
-</div>
-
-<div class="bg-white rounded-xl border border-gray-200">
-    <div class="overflow-x-auto">
-        <table class="w-full text-sm">
-            <thead class="bg-gray-50 text-left">
-                <tr>
-                    <th class="px-5 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wide">Name</th>
-                    <th class="px-5 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wide">Username</th>
-                    <th class="px-5 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wide">Phone</th>
-                    <th class="px-5 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wide">Status</th>
-                    <th class="px-5 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wide">Actions</th>
-                </tr>
-            </thead>
-            <tbody class="divide-y divide-gray-100">
-                {% for s in staff_members %}
-                <tr class="hover:bg-gray-50">
-                    <td class="px-5 py-3 font-medium text-gray-800">{{ s.get_full_name|default:"—" }}</td>
-                    <td class="px-5 py-3 text-gray-600">{{ s.username }}</td>
-                    <td class="px-5 py-3 text-gray-600">{{ s.phone|default:"—" }}</td>
-                    <td class="px-5 py-3">
-                        {% if s.is_active %}
-                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">Active</span>
-                        {% else %}
-                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-600">Inactive</span>
-                        {% endif %}
-                    </td>
-                    <td class="px-5 py-3">
-                        <div class="flex items-center gap-3">
-                            <a href="{% url 'staff_edit' s.pk %}" class="text-blue-600 hover:text-blue-800 text-xs font-medium">Edit</a>
-                            <form method="post" action="{% url 'staff_toggle_active' s.pk %}" class="inline">
-                                {% csrf_token %}
-                                <button type="submit" class="text-xs font-medium {% if s.is_active %}text-red-600 hover:text-red-800{% else %}text-green-600 hover:text-green-800{% endif %}">
-                                    {% if s.is_active %}Deactivate{% else %}Activate{% endif %}
-                                </button>
-                            </form>
-                        </div>
-                    </td>
-                </tr>
-                {% empty %}
-                <tr>
-                    <td colspan="5" class="px-5 py-10 text-center text-gray-400">No staff members added yet.</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    </div>
-</div>
+<div class="flex items-center justify-between mb-6"><h2 class="text-2xl font-bold">Staff Members</h2><a href="{% url 'staff_create' %}" class="px-4 py-2.5 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700">+ Add Staff</a></div>
+<div class="bg-white rounded-xl border"><div class="overflow-x-auto"><table class="w-full text-sm"><thead class="bg-gray-50"><tr><th class="px-5 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Name</th><th class="px-5 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Username</th><th class="px-5 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Phone</th><th class="px-5 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Status</th><th class="px-5 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Actions</th></tr></thead>
+<tbody class="divide-y">{% for s in staff_members %}<tr><td class="px-5 py-3 font-medium">{{ s.get_full_name|default:"—" }}</td><td class="px-5 py-3 text-gray-600">{{ s.username }}</td><td class="px-5 py-3 text-gray-600">{{ s.phone|default:"—" }}</td><td class="px-5 py-3">{% if s.is_active %}<span class="px-2 py-0.5 rounded-full text-xs bg-green-100 text-green-800">Active</span>{% else %}<span class="px-2 py-0.5 rounded-full text-xs bg-gray-100 text-gray-600">Inactive</span>{% endif %}</td><td class="px-5 py-3"><a href="{% url 'staff_edit' s.pk %}" class="text-blue-600 text-xs font-medium mr-3">Edit</a><form method="post" action="{% url 'staff_toggle_active' s.pk %}" class="inline">{% csrf_token %}<button type="submit" class="text-xs font-medium {% if s.is_active %}text-red-600{% else %}text-green-600{% endif %}">{% if s.is_active %}Deactivate{% else %}Activate{% endif %}</button></form></td></tr>{% empty %}<tr><td colspan="5" class="px-5 py-10 text-center text-gray-400">No staff yet.</td></tr>{% endfor %}</tbody></table></div></div>
 {% endblock %}
