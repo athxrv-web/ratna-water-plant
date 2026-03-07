@@ -7,32 +7,21 @@ from .models import User, Customer, Delivery, Salary
 class UserAdmin(BaseUserAdmin):
     list_display = ("username", "get_full_name", "role", "phone", "is_active")
     list_filter = ("role", "is_active")
-    fieldsets = BaseUserAdmin.fieldsets + (
-        ("Extra Info", {"fields": ("role", "phone")}),
-    )
-    add_fieldsets = BaseUserAdmin.add_fieldsets + (
-        ("Extra Info", {"fields": ("role", "phone", "first_name", "last_name")}),
-    )
+    fieldsets = BaseUserAdmin.fieldsets + (("Extra Info", {"fields": ("role", "phone")}),)
+    add_fieldsets = BaseUserAdmin.add_fieldsets + (("Extra Info", {"fields": ("role", "phone", "first_name", "last_name")}),)
 
 
 @admin.register(Customer)
 class CustomerAdmin(admin.ModelAdmin):
-    list_display = (
-        "name", "phone", "type", "jar_price",
-        "assigned_staff", "is_active", "created_at",
-    )
+    list_display = ("name", "phone", "type", "jar_price", "assigned_staff", "is_active")
     list_filter = ("type", "is_active", "assigned_staff")
-    search_fields = ("name", "phone", "address")
+    search_fields = ("name", "phone")
 
 
 @admin.register(Delivery)
 class DeliveryAdmin(admin.ModelAdmin):
-    list_display = (
-        "customer", "staff", "date", "jar_count",
-        "amount", "payment_status", "payment_mode",
-    )
-    list_filter = ("date", "payment_status", "payment_mode", "staff")
-    search_fields = ("customer__name",)
+    list_display = ("customer", "staff", "date", "jar_count", "amount", "payment_status")
+    list_filter = ("date", "payment_status", "staff")
     date_hierarchy = "date"
 
 
