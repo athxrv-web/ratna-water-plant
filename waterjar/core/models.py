@@ -32,13 +32,8 @@ class Customer(models.Model):
     phone = models.CharField(max_length=15)
     address = models.TextField()
     type = models.CharField(max_length=10, choices=Type.choices, default=Type.REGULAR)
-    jar_price = models.DecimalField(
-        max_digits=8, decimal_places=2, validators=[MinValueValidator(0)],
-        help_text="Price per jar for this customer",
-    )
-    security_deposit = models.DecimalField(
-        max_digits=8, decimal_places=2, default=0, blank=True,
-    )
+    jar_price = models.DecimalField(max_digits=8, decimal_places=2, validators=[MinValueValidator(0)])
+    security_deposit = models.DecimalField(max_digits=8, decimal_places=2, default=0, blank=True)
     assigned_staff = models.ForeignKey(
         User, on_delete=models.SET_NULL, null=True, blank=True,
         limit_choices_to={"role": User.Role.STAFF}, related_name="customers",
@@ -67,12 +62,8 @@ class Delivery(models.Model):
     date = models.DateField()
     jar_count = models.PositiveIntegerField(validators=[MinValueValidator(1)])
     amount = models.DecimalField(max_digits=10, decimal_places=2, editable=False)
-    payment_status = models.CharField(
-        max_length=10, choices=PaymentStatus.choices, default=PaymentStatus.PENDING,
-    )
-    payment_mode = models.CharField(
-        max_length=10, choices=PaymentMode.choices, default=PaymentMode.CASH,
-    )
+    payment_status = models.CharField(max_length=10, choices=PaymentStatus.choices, default=PaymentStatus.PENDING)
+    payment_mode = models.CharField(max_length=10, choices=PaymentMode.choices, default=PaymentMode.CASH)
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
@@ -97,9 +88,7 @@ class Salary(models.Model):
         limit_choices_to={"role": User.Role.STAFF}, related_name="salaries",
     )
     month = models.DateField(help_text="First day of the month")
-    salary_amount = models.DecimalField(
-        max_digits=10, decimal_places=2, validators=[MinValueValidator(0)],
-    )
+    salary_amount = models.DecimalField(max_digits=10, decimal_places=2, validators=[MinValueValidator(0)])
     status = models.CharField(max_length=10, choices=Status.choices, default=Status.UNPAID)
 
     class Meta:
